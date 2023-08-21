@@ -40,9 +40,11 @@ jobs:
     - name: Create version tag
       id: create_tag
       run: |
-        echo "{tag}={steps.version.outputs.FullSemVer}" >> $TAG
-        git tag $TAG
-        git push origin $TAG
+        tag="${{ steps.version.outputs.FullSemVer }}"
+        echo "::github.env.TAG=$tag"
+        git tag $tag
+        git push origin $tag
+        echo created tag: $tag
 
     - name: Publish Linux release artifact
       uses: actions/upload-artifact@v2
