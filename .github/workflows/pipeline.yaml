@@ -1,0 +1,50 @@
+name: .NET 7 Build and Release
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-test-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 7.0.x
+
+    - name: Install GitVersion
+      run: dotnet tool install -g GitVersion.Tool
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Determine version
+      id: version
+      run: gitversion
+
+    - name: Build
+      run: dotnet build --configuration Release --runtime linux-x64 --no-restore
+    
+    - name: Test
+      run: dotnet test --configuration Release --no-build
+
+    - name: Create version tag
+      id: create_tag
+      run: |
+        tag="${{ steps.version.outputs.FullSemVer }}"
+        echo "::set-output name=tag::$tag"
+        git tag $tag
+        git push origin $tag
+
+    - name: Publish Linux release artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Linux-Release-Artifact
+        path: path/to/compiled/executable/linux
