@@ -24,6 +24,7 @@ namespace FakerCLI
             var fixture = new Fixture();
             fixture.Register(() => new Person("pt_BR"));
             fixture.Register(() => new Company("pt_BR"));
+            fixture.Register(() => new PhoneNumbers("pt_BR"));
             fixture.Register(() => new Address("pt_BR"));
 
             if (_arg.HasCpf())
@@ -46,7 +47,8 @@ namespace FakerCLI
 
             if(_arg.HasPhone())
             {
-                var phones = fixture.CreateMany<Person>(_arg.Quantity).Select(p => p.Phone);
+                var format = _arg.HasFormated() ? "(##) 9.####-####" : "##9########";
+                var phones = fixture.CreateMany<PhoneNumbers>(_arg.Quantity).Select(p => p.PhoneNumber(format));
                 _fakersData.AddRange(phones);
             }
 
