@@ -27,7 +27,7 @@ jobs:
 
     - name: Determine version
       id: version
-      run: gitversion
+      run: dotnet gitversion
 
     - name: Build
       run: dotnet build --configuration Release --runtime linux-x64 --no-restore
