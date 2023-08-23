@@ -29,32 +29,23 @@ jobs:
 
     - name: Determine version
       id: version
-      run: dotnet gitversion
+      run: echo "##vso[task.setvariable variable=FullSemver]$(dotnet gitversion /showvariable FullSemver)"
 
     - name: Build
       run: dotnet build -c release --no-restore  --verbosity normal
     
     - name: Test
-      run: dotnet test --configuration Release --no-build  --verbosity normal
-
-    - name: Define new version
-      if: "github.ref == 'refs/heads/master'"
-      id: github_release
-      uses: ncipollo/release-action@v1
-      with:
-        tag: v${{ steps.gitversion.outputs.semVer }}
-        name: v${{ steps.gitversion.outputs.semVer }}
-        body: ${{ steps.tag_version.outputs.changelog }}
+      run: dotnet test --configuration Release --no-build  --verbosity normal    
 
 
-    # - name: Create version tag
-    #   id: create_tag
-    #   run: |
-    #     tag="${{ steps.version.outputs.FullSemVer }}"
-    #     echo "::github.env.TAG=$tag"
-    #     git tag $tag
-    #     git push origin $tag
-    #     echo created tag: $tag
+    - name: Create version tag
+      id: create_tag
+      run: |
+        tag="${{ needs.build-and-test-linux.outputs.version }}"
+        echo "::github.env.TAG=$tag"
+        git tag $tag
+        git push origin $tag
+        echo created tag: $tag
 
     # - name: Publish Linux release artifact
     #   uses: actions/upload-artifact@v2
