@@ -29,7 +29,7 @@ jobs:
 
     - name: Determine version
       id: version
-      run: echo "FullSemver=$(dotnet gitversion /showvariable FullSemver)" >> $GITHUB_ENV
+      run: echo "::set-output name=FullSemver::$(dotnet gitversion /showvariable FullSemver)"
 
     - name: Build
       run: dotnet build -c release --no-restore  --verbosity normal
@@ -42,7 +42,7 @@ jobs:
       id: create_tag
       run: |
         tag="${{ needs.build-and-test-linux.outputs.version }}"
-        echo "::github.env.TAG=$tag"
+        echo "::set-output name=tag::$tag"
         git tag $tag
         git push origin $tag
         echo created tag: $tag
