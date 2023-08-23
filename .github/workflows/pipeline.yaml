@@ -25,29 +25,39 @@ jobs:
       run: dotnet tool install -g GitVersion.Tool
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore --verbosity normal
 
     - name: Determine version
       id: version
       run: dotnet gitversion
 
     - name: Build
-      run: dotnet build -c release --no-restore
+      run: dotnet build -c release --no-restore  --verbosity normal
     
     - name: Test
-      run: dotnet test --configuration Release --no-build
+      run: dotnet test --configuration Release --no-build  --verbosity normal
 
-    - name: Create version tag
-      id: create_tag
-      run: |
-        tag="${{ steps.version.outputs.FullSemVer }}"
-        echo "::github.env.TAG=$tag"
-        git tag $tag
-        git push origin $tag
-        echo created tag: $tag
-
-    - name: Publish Linux release artifact
-      uses: actions/upload-artifact@v2
+    - name: Define new version
+      if: "github.ref == 'refs/heads/master'"
+      id: github_release
+      uses: ncipollo/release-action@v1
       with:
-        name: Linux-Release-Artifact
-        path: path/to/compiled/executable/linux
+        tag: v${{ steps.gitversion.outputs.semVer }}
+        name: v${{ steps.gitversion.outputs.semVer }}
+        body: ${{ steps.tag_version.outputs.changelog }}
+
+
+    # - name: Create version tag
+    #   id: create_tag
+    #   run: |
+    #     tag="${{ steps.version.outputs.FullSemVer }}"
+    #     echo "::github.env.TAG=$tag"
+    #     git tag $tag
+    #     git push origin $tag
+    #     echo created tag: $tag
+
+    # - name: Publish Linux release artifact
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: Linux-Release-Artifact
+    #     path: path/to/compiled/executable/linux
