@@ -39,7 +39,7 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0
    
     - name: Dotnet Build
-      run: dotnet build -c release --no-restore  #--verbosity normal
+      run: dotnet build -c release --no-restore --output FakerCLI.$GITVERSION_FULLSEMVER src/FakerCLI   #--verbosity normal
     
     - name: Dotnet Test
       run: dotnet test --configuration Release --no-build  #--verbosity normal    
@@ -54,7 +54,9 @@ jobs:
         echo created tag: $GITVERSION_FULLSEMVER
     
     - name: Display Directory
-      run: ls -l
+      run: |
+        ls -l
+        dotnet --version
 
     - name: Create Release
       id: create_release
