@@ -61,10 +61,10 @@ jobs:
       uses: gittools/actions/gitreleasemanager/create@v0
       with:
         token: ${{ secrets.ACTION_PAT_SECRET }}
-        owner: 'someOwner'
-        repository: 'someRepository'
-        milestone: '$GITVERSION_FULLSEMVER'
-        name: 'v$GITVERSION_FULLSEMVER'
+        owner: ${{ github.repository_owner }}
+        repository: ${{ github.event.repository.name }}
+        milestone: $GITVERSION_FULLSEMVER'
+        name: $GITVERSION_FULLSEMVER
         assets:  |
           src/*          
       # run: |
