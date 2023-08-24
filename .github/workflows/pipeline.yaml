@@ -16,7 +16,7 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Setup .NET
+    - name: Install .NET
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 7.0.x
@@ -25,6 +25,11 @@ jobs:
       uses: gittools/actions/gitversion/setup@v0
       with:
         versionSpec: '5.x'
+
+    - uses: gittools/actions/gitreleasemanager/setup@v0
+      name: Install GitReleaseManager
+      with:
+        versionSpec: '0.10.x'
 
     - name: Restore dependencies
       run: dotnet restore --verbosity normal
@@ -41,12 +46,24 @@ jobs:
 
     - name: Create version tag
       id: create_tag
-      env:
-        FULL_SEMVER: ${{ steps.gitversion.outputs.fullSemVer }}
       run: |
-        echo "FullSemVer: $FULL_SEMVER"
-        echo "InformationalVersion: ${{ steps.gitversion.outputs.informationalVersion }}"
+        echo "GITVERSION_INFORMATIONALVERSION: $GITVERSION_INFORMATIONALVERSION"
         echo "GITVERSION_FULLSEMVER: $GITVERSION_FULLSEMVER"
-        git tag $FULL_SEMVER
-        git push origin $FULL_SEMVER
-        echo created tag: $FULL_SEMVER
+        git tag $GITVERSION_FULLSEMVER
+        git push origin $GITVERSION_FULLSEMVER
+        echo created tag: $GITVERSION_FULLSEMVER
+
+    - name: Create Release
+      id: create_release
+      run: |
+        gitreleasemanager create -version ${{ steps.version.outputs.GITVERSION_FULLSEMVER }} -token ${{ secrets.ACTION_PAT_SECRET }} -owner ${{ github.repository_owner }} -repo ${{ github.event.repository.name }}
+
+    - name: Create Source Code Zip
+      run:
+        git archive -o source-code.zip HEAD
+
+    - name: Upload Source Code Zip
+      run: |
+        gitreleasemanager upload -assetpath "source-code.zip" -token ${{ secrets.ACTION_PAT_SECRET }} -owner ${{ github.repository_owner }} -repo ${{ github.event.repository.name }} -tag ${{ steps.create_release.outputs.tag_name }}
+      
+    
