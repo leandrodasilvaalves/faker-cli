@@ -14,7 +14,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
-        fetch-depth: 0  # Fetch the complete history
+        fetch-depth: 0
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
@@ -22,14 +22,21 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: Install GitVersion
-      run: dotnet tool install -g GitVersion.Tool
+      run: gitversion/setup@v0
 
     - name: Restore dependencies
       run: dotnet restore --verbosity normal
 
     - name: Determine version
-      id: version
-      run: echo "::set-output name=FullSemver::$(dotnet gitversion /showvariable FullSemver)"
+      id: gitversion
+      run: gittools/actions/gitversion/execute@v0
+
+    - name: Display GitVersion
+      env:
+        FULL_SEMVER: ${{ steps.gitversion.outputs.fullSemVer }}
+      run: |
+        echo "FullSemVer: $FULL_SEMVER"
+        echo "InformationalVersion: ${{ steps.gitversion.outputs.informationalVersion }}"
 
     - name: Build
       run: dotnet build -c release --no-restore  --verbosity normal
@@ -41,11 +48,9 @@ jobs:
     - name: Create version tag
       id: create_tag
       run: |
-        tag="${{ needs.build-and-test-linux.outputs.version }}"
-        echo "::set-output name=tag::$tag"
-        git tag $tag
-        git push origin $tag
-        echo created tag: $tag
+        git tag $FULL_SEMVER
+        git push origin $FULL_SEMVER
+        echo created tag: $FULL_SEMVER
 
     # - name: Publish Linux release artifact
     #   uses: actions/upload-artifact@v2
