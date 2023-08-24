@@ -16,10 +16,15 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install .NET
+    - name: Install .NET 7
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 7.0.x
+    
+    - name: Install .NET 3
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '3.0.0'
 
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0
@@ -71,9 +76,7 @@ jobs:
         milestone: $GITVERSION_FULLSEMVER'
         name: $GITVERSION_FULLSEMVER
         assets:  |
-          src/*          
-      # run: |
-      #   gitreleasemanager create -version $GITVERSION_FULLSEMVER -token ${{ secrets.ACTION_PAT_SECRET }} -owner ${{ github.repository_owner }} -repo ${{ github.event.repository.name }}
+          FakerCLI.$GITVERSION_FULLSEMVER
 
 
     - name: Create Source Code Zip
