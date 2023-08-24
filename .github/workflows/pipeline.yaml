@@ -32,17 +32,17 @@ jobs:
         versionSpec: '0.10.x'
 
     - name: Restore dependencies
-      run: dotnet restore --verbosity normal
+      run: dotnet restore #--verbosity normal
 
     - name: Determine version
       id: gitversion
       uses: gittools/actions/gitversion/execute@v0
    
     - name: Dotnet Build
-      run: dotnet build -c release --no-restore  --verbosity normal
+      run: dotnet build -c release --no-restore  #--verbosity normal
     
     - name: Dotnet Test
-      run: dotnet test --configuration Release --no-build  --verbosity normal    
+      run: dotnet test --configuration Release --no-build  #--verbosity normal    
 
     - name: Create version tag
       id: create_tag
@@ -52,11 +52,24 @@ jobs:
         git tag $GITVERSION_FULLSEMVER
         git push origin $GITVERSION_FULLSEMVER
         echo created tag: $GITVERSION_FULLSEMVER
+    
+    - name: Display Directory
+      run: ls -l
 
     - name: Create Release
       id: create_release
-      run: |
-        gitreleasemanager create -version ${{ steps.version.outputs.GITVERSION_FULLSEMVER }} -token ${{ secrets.ACTION_PAT_SECRET }} -owner ${{ github.repository_owner }} -repo ${{ github.event.repository.name }}
+      uses: gittools/actions/gitreleasemanager/createv0
+      with:
+        token: ${{ secrets.ACTION_PAT_SECRET }}
+        owner: 'someOwner'
+        repository: 'someRepository'
+        milestone: '$GITVERSION_FULLSEMVER'
+        name: 'v$GITVERSION_FULLSEMVER'
+        assets:  |
+          src/*          
+      # run: |
+      #   gitreleasemanager create -version $GITVERSION_FULLSEMVER -token ${{ secrets.ACTION_PAT_SECRET }} -owner ${{ github.repository_owner }} -repo ${{ github.event.repository.name }}
+
 
     - name: Create Source Code Zip
       run:
