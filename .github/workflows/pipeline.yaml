@@ -22,7 +22,7 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: Install GitVersion
-      run: gitversion/setup@v0
+      run: gittools/actions/gitversion/setup@v0
 
     - name: Restore dependencies
       run: dotnet restore --verbosity normal
