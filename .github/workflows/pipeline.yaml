@@ -9,7 +9,7 @@ on:
 jobs:
   build-and-test-linux:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -31,9 +31,7 @@ jobs:
 
     - name: Determine version
       id: gitversion
-      run: gittools/actions/gitversion/execute@v0
-      with:
-        useConfigFile: false
+      uses: gittools/actions/gitversion/execute@v0
         
 
     - name: Display GitVersion
