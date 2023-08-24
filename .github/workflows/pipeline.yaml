@@ -9,7 +9,7 @@ on:
 jobs:
   build-and-test-linux:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -32,6 +32,9 @@ jobs:
     - name: Determine version
       id: gitversion
       run: gittools/actions/gitversion/execute@v0
+      with:
+        useConfigFile: false
+        
 
     - name: Display GitVersion
       env:
@@ -40,10 +43,10 @@ jobs:
         echo "FullSemVer: $FULL_SEMVER"
         echo "InformationalVersion: ${{ steps.gitversion.outputs.informationalVersion }}"
 
-    - name: Build
+    - name: Dotnet Build
       run: dotnet build -c release --no-restore  --verbosity normal
     
-    - name: Test
+    - name: Dotnet Test
       run: dotnet test --configuration Release --no-build  --verbosity normal    
 
 
@@ -53,9 +56,3 @@ jobs:
         git tag $FULL_SEMVER
         git push origin $FULL_SEMVER
         echo created tag: $FULL_SEMVER
-
-    # - name: Publish Linux release artifact
-    #   uses: actions/upload-artifact@v2
-    #   with:
-    #     name: Linux-Release-Artifact
-    #     path: path/to/compiled/executable/linux
