@@ -25,7 +25,6 @@ jobs:
       uses: gittools/actions/gitversion/setup@v0
       with:
         versionSpec: '5.x'
-        preferLatestVersion: true
 
     - name: Restore dependencies
       run: dotnet restore --verbosity normal
