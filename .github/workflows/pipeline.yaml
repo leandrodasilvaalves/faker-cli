@@ -32,25 +32,21 @@ jobs:
     - name: Determine version
       id: gitversion
       uses: gittools/actions/gitversion/execute@v0
-        
-
-    - name: Display GitVersion
-      env:
-        FULL_SEMVER: ${{ steps.gitversion.outputs.fullSemVer }}
-      run: |
-        echo "FullSemVer: $FULL_SEMVER"
-        echo "InformationalVersion: ${{ steps.gitversion.outputs.informationalVersion }}"
-
+   
     - name: Dotnet Build
       run: dotnet build -c release --no-restore  --verbosity normal
     
     - name: Dotnet Test
       run: dotnet test --configuration Release --no-build  --verbosity normal    
 
-
     - name: Create version tag
       id: create_tag
+      env:
+        FULL_SEMVER: ${{ steps.gitversion.outputs.fullSemVer }}
       run: |
+        echo "FullSemVer: $FULL_SEMVER"
+        echo "InformationalVersion: ${{ steps.gitversion.outputs.informationalVersion }}"
+        echo "GITVERSION_FULLSEMVER: $GITVERSION_FULLSEMVER"
         git tag $FULL_SEMVER
         git push origin $FULL_SEMVER
         echo created tag: $FULL_SEMVER
