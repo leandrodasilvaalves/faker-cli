@@ -58,7 +58,7 @@ jobs:
 
     - name: Create Release
       id: create_release
-      uses: gittools/actions/gitreleasemanager/createv0
+      uses: gittools/actions/gitreleasemanager/create@v0
       with:
         token: ${{ secrets.ACTION_PAT_SECRET }}
         owner: 'someOwner'
@@ -72,8 +72,7 @@ jobs:
 
 
     - name: Create Source Code Zip
-      run:
-        git archive -o source-code.zip HEAD
+      run: git archive -o source-code.zip HEAD
 
     - name: Upload Source Code Zip
       run: |
