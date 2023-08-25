@@ -60,8 +60,9 @@ jobs:
 
     - name: Dotnet Publish
       run: |
-        dotnet publish -c Release --output FakerCLI.$GITVERSION_FULLSEMVER src/FakerCLI 
-        tar -cvf FakerCLI.$GITVERSION_FULLSEMVER.tar.gz FakerCLI.$GITVERSION_FULLSEMVER
+        dotnet publish -c Release --output FakerCLI.$GITVERSION_FULLSEMVER src/FakerCLI
+        mv ./FakerCLI/FakerCLI ./FakerCLI/faker 
+        tar -cvf FakerCLI.tar.gz FakerCLI.$GITVERSION_FULLSEMVER
     
     - name: Display Directory
       run: |
@@ -79,14 +80,14 @@ jobs:
         token: ${{ secrets.ACTION_PAT_SECRET }}
         owner: ${{ github.repository_owner }}
         repository: ${{ github.event.repository.name }}
-        name: $GITVERSION_FULLSEMVER
+        name: Faker-CLI.$GITVERSION_FULLSEMVER
         assets:  |
           ./.github/workflows/assets.txt
 
-    - name: Create Source Code Zip
-      run: git archive -o source-code.zip HEAD
+    # - name: Create Source Code Zip
+    #   run: git archive -o source-code.zip HEAD
 
-    - name: Upload Source Code Zip
-      run: |
-        gitreleasemanager upload -assetpath "source-code.zip" -token ${{ secrets.ACTION_PAT_SECRET }} -owner ${{ github.repository_owner }} -repo ${{ github.event.repository.name }} -tag ${{ steps.create_release.outputs.tag_name }}
+    # - name: Upload Source Code Zip
+    #   run: |
+    #     gitreleasemanager upload -assetpath "source-code.zip" -token ${{ secrets.ACTION_PAT_SECRET }} -owner ${{ github.repository_owner }} -repo ${{ github.event.repository.name }} -tag ${{ steps.create_release.outputs.tag_name }}
   
