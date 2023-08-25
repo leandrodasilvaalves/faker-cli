@@ -67,11 +67,11 @@ jobs:
     - name: Display Directory
       run: |
         echo exibindo diretório
-        ls -l
+        ls -la
         echo dotnet-version: $(dotnet --version)
         echo -----------------------------------
         echo exibindo diretório .github/workflows
-        ls -l ./.github/workflows
+        ls -la ./.github/workflows
 
     - name: Create Release
       id: create_release
