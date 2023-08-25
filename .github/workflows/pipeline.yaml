@@ -84,6 +84,7 @@ jobs:
         inputFilePath: GitReleaseManager.yaml
         assets: |
           ./FakerCLI.tar.gz
+          --no-yaml
 
     # - name: Create Source Code Zip
     #   run: git archive -o source-code.zip HEAD
