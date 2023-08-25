@@ -81,7 +81,8 @@ jobs:
         owner: ${{ github.repository_owner }}
         repository: ${{ github.event.repository.name }}
         name: Faker-CLI.$GITVERSION_FULLSEMVER
-        assets:  |
+        inputFilePath: GitReleaseManager.yaml
+        assets: |
           ./FakerCLI.tar.gz
 
     # - name: Create Source Code Zip
