@@ -59,7 +59,9 @@ jobs:
         echo created tag: $GITVERSION_FULLSEMVER
 
     - name: Dotnet Publish
-      run: dotnet publish -c Release --output FakerCLI.$GITVERSION_FULLSEMVER src/FakerCLI 
+      run: |
+        dotnet publish -c Release --output FakerCLI.$GITVERSION_FULLSEMVER src/FakerCLI 
+        tar -cvf FakerCLI.$GITVERSION_FULLSEMVER.tar.gz FakerCLI.$GITVERSION_FULLSEMVER
     
     - name: Display Directory
       run: |
@@ -75,7 +77,7 @@ jobs:
         repository: ${{ github.event.repository.name }}
         name: $GITVERSION_FULLSEMVER
         assets:  |
-          FakerCLI.$GITVERSION_FULLSEMVER
+          assets.txt
 
 
     - name: Create Source Code Zip
