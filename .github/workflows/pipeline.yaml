@@ -61,7 +61,7 @@ jobs:
     - name: Dotnet Publish
       run: |
         dotnet publish -c Release --output FakerCLI.$GITVERSION_FULLSEMVER src/FakerCLI
-        mv ./FakerCLI/FakerCLI ./FakerCLI/faker 
+        mv ./FakerCLI.$GITVERSION_FULLSEMVER/FakerCLI ./FakerCLI.$GITVERSION_FULLSEMVER/faker 
         tar -cvf FakerCLI.tar.gz FakerCLI.$GITVERSION_FULLSEMVER
     
     - name: Display Directory
