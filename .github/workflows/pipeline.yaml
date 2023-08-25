@@ -82,7 +82,7 @@ jobs:
         repository: ${{ github.event.repository.name }}
         name: Faker-CLI.$GITVERSION_FULLSEMVER
         assets:  |
-          ./.github/workflows/assets.txt
+          ./FakerCLI.tar.gz
 
     # - name: Create Source Code Zip
     #   run: git archive -o source-code.zip HEAD
