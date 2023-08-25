@@ -73,7 +73,6 @@ jobs:
         token: ${{ secrets.ACTION_PAT_SECRET }}
         owner: ${{ github.repository_owner }}
         repository: ${{ github.event.repository.name }}
-        milestone: $GITVERSION_FULLSEMVER'
         name: $GITVERSION_FULLSEMVER
         assets:  |
           FakerCLI.$GITVERSION_FULLSEMVER
