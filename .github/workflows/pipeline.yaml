@@ -21,20 +21,24 @@ jobs:
       with:
         dotnet-version: 7.0.x
     
-    - name: Install .NET 3
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '3.x.x'
+    # - name: Install .NET 3 # dependência do gitreleasemanager      
+    #   uses: actions/setup-dotnet@v2
+    #   with:
+    #     dotnet-version: '3.x.x'
 
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0
       with:
         versionSpec: '5.x'
 
-    - uses: gittools/actions/gitreleasemanager/setup@v0
-      name: Install GitReleaseManager
-      with:
-        versionSpec: '0.10.x'
+    # - uses: gittools/actions/gitreleasemanager/setup@v0
+    #   name: Install GitReleaseManager
+    #   with:
+    #     versionSpec: '0.10.x'
+    - name: Install GitReleaseManager
+      run : |
+        dotnet tool install --global GitReleaseManager.Tool
+        dotnet-gitreleasemanager --version
 
     - name: Restore dependencies
       run: dotnet restore #--verbosity normal
@@ -74,16 +78,25 @@ jobs:
         ls -la ./.github/workflows    
 
     - name: Create Release
-      id: create_release
-      uses: gittools/actions/gitreleasemanager/create@v0
-      with:
-        token: ${{ secrets.ACTION_PAT_SECRET }}
-        owner: ${{ github.repository_owner }}
-        repository: ${{ github.event.repository.name }}
-        name: Faker-CLI.$GITVERSION_FULLSEMVER
-        allowEmpty: true
-        assets: |
-          ./FakerCLI.tar.gz
+      run: |
+        dotnet-gitreleasemanager create -n Faker-CLI.$GITVERSION_FULLSEMVER \
+        --token ${{ secrets.ACTION_PAT_SECRET }} \
+        -o ${{ github.repository_owner }} \
+        -r ${{ github.event.repository.name }} \
+        --assets ./FakerCLI.tar.gz \
+        --allowEmpty
+
+    # - name: Create Release
+    #   id: create_release
+    #   uses: gittools/actions/gitreleasemanager/create@v0
+    #   with:
+    #     token: ${{ secrets.ACTION_PAT_SECRET }}
+    #     owner: ${{ github.repository_owner }}
+    #     repository: ${{ github.event.repository.name }}
+    #     name: Faker-CLI.$GITVERSION_FULLSEMVER
+    #     allowEmpty: true
+    #     assets: |
+    #       ./FakerCLI.tar.gz
 
     # - name: Create Source Code Zip
     #   run: git archive -o source-code.zip HEAD
