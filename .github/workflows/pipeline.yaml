@@ -73,9 +73,17 @@ jobs:
 
     - name: Create Release
       run: |
-        dotnet-gitreleasemanager create -n aker-cli.$GITVERSION_FULLSEMVER \
+        dotnet-gitreleasemanager create -n faker-cli.$GITVERSION_FULLSEMVER \
         --token ${{ secrets.ACTION_PAT_SECRET }} \
         --owner ${{ github.repository_owner }} \
         --repository ${{ github.event.repository.name }} \
         --assets ./FakerCLI.tar.gz \
         --inputFilePath .github/workflows/GitReleaseManager.yaml
+
+    - name: Publish Release
+      run: |
+        dotnet-gitreleasemanager publish \
+        --tagName $GITVERSION_FULLSEMVER \
+        --token ${{ secrets.ACTION_PAT_SECRET }} \
+        --owner ${{ github.repository_owner }} \
+        --repository ${{ github.event.repository.name }}
