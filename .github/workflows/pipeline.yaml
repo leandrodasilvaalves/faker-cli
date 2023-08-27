@@ -77,7 +77,7 @@ jobs:
 
     - name: Create Release
       run: |
-        dotnet-gitreleasemanager create -n Faker-CLI.$GITVERSION_FULLSEMVER \
+        dotnet-gitreleasemanager create -n Faker-CLI.${{ GITVERSION_FULLSEMVER }} \
         --token ${{ secrets.ACTION_PAT_SECRET }} \
         -owner ${{ github.repository_owner }} \
         --repository ${{ github.event.repository.name }} \
