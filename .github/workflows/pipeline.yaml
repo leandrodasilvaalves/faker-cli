@@ -36,9 +36,7 @@ jobs:
     #   with:
     #     versionSpec: '0.10.x'
     - name: Install GitReleaseManager
-      run : |
-        dotnet tool install --global GitReleaseManager.Tool
-        dotnet-gitreleasemanager --version
+      run : dotnet tool install --global GitReleaseManager.Tool
 
     - name: Restore dependencies
       run: dotnet restore #--verbosity normal
