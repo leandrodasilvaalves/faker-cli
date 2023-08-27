@@ -7,10 +7,89 @@ on:
       - develop
 
 jobs:
+  Version:
+    runs-on: ubuntu-latest
+
+    steps:    
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0
+      with:
+        versionSpec: '5.x'
+
+    - name: Determine version
+      id: gitversion
+      uses: gittools/actions/gitversion/execute@v0
+
+
   build-and-test-linux:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        
+    - name: Install .NET 7
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 7.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore #--verbosity normal
+   
+    - name: Dotnet Build
+      run: dotnet build -c release --no-restore  #--verbosity normal
+    
+    - name: Dotnet Test
+      run: dotnet test --configuration Release --no-build  #--verbosity normal 
+
+    - name: Dotnet Publish
+      run: |
+        dotnet publish -c Release --output FakerCLI.$GITVERSION_FULLSEMVER src/FakerCLI
+        mv ./FakerCLI.$GITVERSION_FULLSEMVER/FakerCLI ./FakerCLI.$GITVERSION_FULLSEMVER/faker 
+        tar -cvf FakerCLI.linux.tar.gz FakerCLI.$GITVERSION_FULLSEMVER
+
+
+  build-and-test-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        
+    - name: Install .NET 7
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 7.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore #--verbosity normal
+   
+    - name: Dotnet Build
+      run: dotnet build -c release --no-restore  #--verbosity normal
+    
+    - name: Dotnet Test
+      run: dotnet test --configuration Release --no-build  #--verbosity normal
+
+    - name: Dotnet Publish
+      run: |
+        dotnet publish -c Release --output FakerCLI.$GITVERSION_FULLSEMVER src/FakerCLI
+        Rename-Item -Path ./FakerCLI.$GITVERSION_FULLSEMVER/FakerCLI.exe -NewName ./FakerCLI.$GITVERSION_FULLSEMVER/faker.exe
+        Compress-Archive -Path .\FakerCLI.$GITVERSION_FULLSEMVER\* -DestinationPath FakerCLI.windows.zip
+
+
+  Release:
+    runs-on: ubuntu-latest
+
+    steps:    
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
@@ -20,32 +99,9 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x # gitreleasemanager dependency
-        
-    - name: Install .NET 7
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: 7.0.x
-
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0
-      with:
-        versionSpec: '5.x'
 
     - name: Install GitReleaseManager
       run : dotnet tool install --global GitReleaseManager.Tool --version 0.14.0
-
-    - name: Restore dependencies
-      run: dotnet restore #--verbosity normal
-
-    - name: Determine version
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v0
-   
-    - name: Dotnet Build
-      run: dotnet build -c release --no-restore  #--verbosity normal
-    
-    - name: Dotnet Test
-      run: dotnet test --configuration Release --no-build  #--verbosity normal    
 
     - name: Create version tag
       id: create_tag
@@ -55,31 +111,7 @@ jobs:
         git tag $GITVERSION_FULLSEMVER
         git push origin $GITVERSION_FULLSEMVER
         echo created tag: $GITVERSION_FULLSEMVER
-
-    - name: Dotnet Publish
-      run: |
-        dotnet publish -c Release --output FakerCLI.$GITVERSION_FULLSEMVER src/FakerCLI
-        mv ./FakerCLI.$GITVERSION_FULLSEMVER/FakerCLI ./FakerCLI.$GITVERSION_FULLSEMVER/faker 
-        tar -cvf FakerCLI.tar.gz FakerCLI.$GITVERSION_FULLSEMVER
     
-    - name: Display Directory
-      run: |
-        echo exibindo diretório
-        ls -la
-        echo dotnet-version: $(dotnet --version)
-        echo -----------------------------------
-        echo exibindo diretório .github/workflows
-        ls -la ./.github/workflows    
-
-    - name: Create Release
-      run: |
-        dotnet-gitreleasemanager create -n faker-cli.$GITVERSION_FULLSEMVER \
-        --token ${{ secrets.ACTION_PAT_SECRET }} \
-        --owner ${{ github.repository_owner }} \
-        --repository ${{ github.event.repository.name }} \
-        --assets ./FakerCLI.tar.gz \
-        --inputFilePath .github/workflows/GitReleaseManager.yaml
-
     - name: Publish Release
       run: |
         dotnet-gitreleasemanager publish \
