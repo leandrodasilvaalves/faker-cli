@@ -83,7 +83,7 @@ jobs:
     - name: Publish Release
       run: |
         dotnet-gitreleasemanager publish \
-        --tagName $GITVERSION_FULLSEMVER \
+        --tagName faker-cli.$GITVERSION_FULLSEMVER \
         --token ${{ secrets.ACTION_PAT_SECRET }} \
         --owner ${{ github.repository_owner }} \
         --repository ${{ github.event.repository.name }}
