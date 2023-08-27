@@ -71,7 +71,7 @@ jobs:
         echo dotnet-version: $(dotnet --version)
         echo -----------------------------------
         echo exibindo diretório .github/workflows
-        ls -la ./.github/workflows
+        ls -la ./.github/workflows    
 
     - name: Create Release
       id: create_release
@@ -81,10 +81,9 @@ jobs:
         owner: ${{ github.repository_owner }}
         repository: ${{ github.event.repository.name }}
         name: Faker-CLI.$GITVERSION_FULLSEMVER
-        inputFilePath: GitReleaseManager.yaml
+        allowEmpty: true
         assets: |
           ./FakerCLI.tar.gz
-          --no-yaml
 
     # - name: Create Source Code Zip
     #   run: git archive -o source-code.zip HEAD
