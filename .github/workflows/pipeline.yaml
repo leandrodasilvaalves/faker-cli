@@ -20,23 +20,14 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 7.0.x
-    
-    # - name: Install .NET 3 # dependência do gitreleasemanager      
-    #   uses: actions/setup-dotnet@v2
-    #   with:
-    #     dotnet-version: '3.x.x'
 
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0
       with:
         versionSpec: '5.x'
 
-    # - uses: gittools/actions/gitreleasemanager/setup@v0
-    #   name: Install GitReleaseManager
-    #   with:
-    #     versionSpec: '0.10.x'
     - name: Install GitReleaseManager
-      run : dotnet tool install --global GitReleaseManager.Tool
+      run : dotnet tool install --global GitReleaseManager.Tool --version 0.14.0
 
     - name: Restore dependencies
       run: dotnet restore #--verbosity normal
@@ -77,28 +68,9 @@ jobs:
 
     - name: Create Release
       run: |
-        dotnet-gitreleasemanager create -n Faker-CLI.${{ GITVERSION_FULLSEMVER }} \
+        dotnet-gitreleasemanager create -n aker-cli.$GITVERSION_FULLSEMVER \
         --token ${{ secrets.ACTION_PAT_SECRET }} \
-        -owner ${{ github.repository_owner }} \
+        --owner ${{ github.repository_owner }} \
         --repository ${{ github.event.repository.name }} \
-        --assets ./FakerCLI.tar.gz 
-
-    # - name: Create Release
-    #   id: create_release
-    #   uses: gittools/actions/gitreleasemanager/create@v0
-    #   with:
-    #     token: ${{ secrets.ACTION_PAT_SECRET }}
-    #     owner: ${{ github.repository_owner }}
-    #     repository: ${{ github.event.repository.name }}
-    #     name: Faker-CLI.$GITVERSION_FULLSEMVER
-    #     allowEmpty: true
-    #     assets: |
-    #       ./FakerCLI.tar.gz
-
-    # - name: Create Source Code Zip
-    #   run: git archive -o source-code.zip HEAD
-
-    # - name: Upload Source Code Zip
-    #   run: |
-    #     gitreleasemanager upload -assetpath "source-code.zip" -token ${{ secrets.ACTION_PAT_SECRET }} -owner ${{ github.repository_owner }} -repo ${{ github.event.repository.name }} -tag ${{ steps.create_release.outputs.tag_name }}
-  
+        --assets ./FakerCLI.tar.gz \
+        --inputFilePath GitReleaseManager.yaml
