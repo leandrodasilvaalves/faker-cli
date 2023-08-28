@@ -108,13 +108,17 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 7.0.x
-
+          
       - name: Dotnet Publish
         run: |
           $directoryPackage = "FakerCLI." + $env:GITVERSION_FULLSEMVER
           dotnet publish -c Release --output $directoryPackage src/FakerCLI
-          Rename-Item -Path $directoryPackage\FakerCLI.exe -NewName $directoryPackage\faker.exe
-          Compress-Archive -Path .\$directoryPackage\* -DestinationPath FakerCLI.windows.zip
+
+          $newFileName = Join-Path -Path $directoryPackage -ChildPath "faker.exe"
+          $oldFileName = Join-Path -Path $directoryPackage -ChildPath "FakerCLI.exe"
+          Rename-Item -Path $oldFileName -NewName $newFileName
+
+          Compress-Archive -Path ".\$directoryPackage\*" -DestinationPath FakerCLI.windows.zip
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
