@@ -9,7 +9,6 @@ on:
 jobs:
   version:
     runs-on: ubuntu-latest
-    
     outputs:
       gitversion_fullsemver: ${{ steps.gitversion.outputs.fullSemVer }}
 
@@ -55,11 +54,10 @@ jobs:
   package-linux:
     runs-on: ubuntu-latest
     needs: [version, build-and-test]
+    env:
+      GITVERSION_FULLSEMVER: ${{ needs.version.outputs.gitversion_fullsemver }}
 
     steps:
-      - env:
-          GITVERSION_FULLSEMVER: ${{ needs.version.outputs.gitversion_fullsemver }}
-
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -97,11 +95,10 @@ jobs:
   package-windows:
     runs-on: windows-latest
     needs: [version, build-and-test]
+    env:
+      GITVERSION_FULLSEMVER: ${{ needs.version.outputs.gitversion_fullsemver }}
 
     steps:
-      - env:
-          GITVERSION_FULLSEMVER: ${{ needs.version.outputs.gitversion_fullsemver }}
-
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -141,11 +138,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: [version, package-linux, package-windows]
+    env:
+      GITVERSION_FULLSEMVER: ${{ needs.version.outputs.gitversion_fullsemver }}
 
     steps:
-      - env:
-          GITVERSION_FULLSEMVER: ${{ needs.version.outputs.gitversion_fullsemver }}
-
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
