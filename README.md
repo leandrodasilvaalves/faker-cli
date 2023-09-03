@@ -39,7 +39,8 @@ Ater that open a terminal and type `--cpf`. You should see a generated number th
   faker --cnpj --formated
   faker --phone --formated
   faker --email
-  faker --cep --formated    
+  faker --zipcode --formated  
+  faker --help #or -h
 ```
 Use -n{x} where `x` is a number specifying the desired amount. Por exemplo:
 ``` bash

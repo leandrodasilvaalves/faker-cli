@@ -1,7 +1,14 @@
 ﻿using FakerCLI;
 
-var _args = new Arg(args);
-var generator = new Generator(_args);
+var arg = new Arg(args);
+
+if (arg.ShouldShowHelp())
+{
+    arg.ShowHelp();
+    return;
+}
+
+var generator = new Generator(arg);
 
 generator.Generate();
 foreach(var data in generator.FakerData)
