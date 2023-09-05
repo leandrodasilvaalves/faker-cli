@@ -31,7 +31,7 @@ Download the latest version according to your operating system [**here**](https:
 ### windows
 Extract the downloaded binaries to the directory of your choice, for example, `c:\faker` and include this directory in your path according to the step by step [**here**](https://learn.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v=office.14)#to-add-a-path-to-the-path-environment-variable).
 
-Ater that open a terminal and type `--cpf`. You should see a generated number that looks like this: `42825545503`
+Ater that open a terminal and type `faker --cpf`. You should see a generated number that looks like this: `42825545503`
 
 ## How to use
 ```bash
