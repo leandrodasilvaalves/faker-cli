@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -35,12 +35,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Install .NET 10
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
 
@@ -62,12 +62,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Install .NET 10
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
 
@@ -78,7 +78,7 @@ jobs:
           tar -cvf FakerCLI.linux.tar.gz FakerCLI.$GITVERSION_FULLSEMVER
       
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: FakerCLI.linux.tar.gz
           path: FakerCLI.linux.tar.gz
@@ -92,12 +92,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Install .NET 10
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
 
@@ -112,7 +112,7 @@ jobs:
           Compress-Archive -Path ".\$directoryPackage\*" -DestinationPath FakerCLI.windows.zip
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: FakerCLI.windows.zip
           path: FakerCLI.windows.zip
@@ -126,22 +126,22 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Download Artifacts Linux
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: FakerCLI.linux.tar.gz
 
       - name: Download Artifacts Windows
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: FakerCLI.windows.zip
 
       - name: Install .NET 10
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x # gitreleasemanager dependency
 
@@ -163,7 +163,7 @@ jobs:
           --owner ${{ github.repository_owner }} \
           --repository ${{ github.event.repository.name }} \
           --assets FakerCLI.linux.tar.gz,FakerCLI.windows.zip \
-          --inputFilePath .github/workflows/GitReleaseManager.yaml
+          --inputFilePath .github/GitReleaseManager.yaml
 
       - name: Publish Release
         run: |
