@@ -140,10 +140,12 @@ jobs:
         with:
           name: FakerCLI.windows.zip
 
-      - name: Install .NET 10
+      - name: Install .NET 6 and 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 10.0.x # gitreleasemanager dependency
+          dotnet-version: |
+            6.0.x
+            10.0.x
 
       - name: Install GitReleaseManager
         run: dotnet tool install --global GitReleaseManager.Tool --version 0.14.0
@@ -152,9 +154,13 @@ jobs:
         id: create_tag
         run: |
           echo "GITVERSION_FULLSEMVER: $GITVERSION_FULLSEMVER"
-          git tag $GITVERSION_FULLSEMVER
-          git push origin $GITVERSION_FULLSEMVER
-          echo created tag: $GITVERSION_FULLSEMVER
+          if git ls-remote --exit-code --tags origin "refs/tags/$GITVERSION_FULLSEMVER"; then
+            echo "tag already exists: $GITVERSION_FULLSEMVER"
+          else
+            git tag $GITVERSION_FULLSEMVER
+            git push origin $GITVERSION_FULLSEMVER
+            echo created tag: $GITVERSION_FULLSEMVER
+          fi
 
       - name: Create Release
         run: |
