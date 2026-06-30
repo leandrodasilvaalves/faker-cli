@@ -9,7 +9,7 @@ If you liked the project or if Faker-CLI helped you, please give a star ;)
 
 ## Requirements
 
-Make sure you have .NET 7 installed on your system.
+Make sure you have .NET 10 installed on your system.
 
 ## Installation
 Download the latest version according to your operating system [**here**](https://github.com/leandrodasilvaalves/faker-cli/releases).
