@@ -1,4 +1,4 @@
-name: .NET 7 Build and Release
+name: .NET 10 Build and Release
 
 on:
   push:
@@ -39,10 +39,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install .NET 7
+      - name: Install .NET 10
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 10.0.x
 
       - name: Restore dependencies
         run: dotnet restore
@@ -66,10 +66,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install .NET 7
+      - name: Install .NET 10
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 10.0.x
 
       - name: Dotnet Publish
         run: |
@@ -96,10 +96,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install .NET 7
+      - name: Install .NET 10
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 10.0.x
 
       - name: Dotnet Publish
         run: |
@@ -140,10 +140,10 @@ jobs:
         with:
           name: FakerCLI.windows.zip
 
-      - name: Install .NET 6
+      - name: Install .NET 10
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.x # gitreleasemanager dependency
+          dotnet-version: 10.0.x # gitreleasemanager dependency
 
       - name: Install GitReleaseManager
         run: dotnet tool install --global GitReleaseManager.Tool --version 0.14.0
